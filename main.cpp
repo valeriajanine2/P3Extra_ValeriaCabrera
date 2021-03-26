@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "ReproductorMusica.hpp"
 #include "Album.hpp"
 #include "Canciones.hpp"
 #include "Genero.hpp"
@@ -45,22 +46,12 @@ void listarPlaylists(vector<Playlist*> lista){
 	}
 }
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char** argv) {
 	
-	Album* album = new Album();
-	Canciones* canciones = new Canciones();
-	Genero* genero = new Genero();
-	Playlist* playlist = new Playlist();
-	
 	int opcion=0;
 	
-	
-	vector<Genero*> genres;
-	vector<Canciones*> songs;
-	vector<Playlist*> playlists;
-	vector<Album*> albums;
+	ReproductorMusica* reproductor = new ReproductorMusica();
 	
 	while(opcion!=5){
 		
@@ -89,30 +80,32 @@ int main(int argc, char** argv) {
 						case 1:{
 							
 							//agregar Canciones
-							if(genres.size()!=0){
+							if(reproductor->getGeneros().size()!=0){
 								string 	nombre, artista, duracion;
 								Genero* g = new Genero();
 								int index;
-								
+								int id;
+								cout<<"ID: ";
+								cin>>id;
 								cout<<"Nombre: ";
 								cin>>nombre;
 								cout<<"Arista: ";
 								cin>>artista;
-								listarGeneros(genres);
+								listarGeneros(reproductor->getGeneros());
 								cout<<"Ingrese el numero del indice del genero: ";
 								cin>>index;
-								while(index>genres.size() || index<0){
+								while(index>reproductor->getGeneros().size() || index<0){
 									cout<<"El numero ingresado no es un indice de la lista"<<endl;
 									cout<<"Ingrese el numero del indice del genero: ";
 									cin>>index;
 								}//fin de la validacion
-								g = genres.at(index);
+								g = reproductor->getGeneros().at(index);
 								cout<<"Ingrese la duracion en formato 00:00: ";
 								cin>>duracion;
 								
-								Canciones* song = new Canciones(nombre,artista,g,duracion);
+								Canciones* song = new Canciones(id,nombre,artista,g,duracion);
 								
-								songs.push_back(song);
+								reproductor->agregarCanciones(song);
 								
 								cout<<endl;
 								
@@ -128,14 +121,14 @@ int main(int argc, char** argv) {
 						case 2:{
 							
 							//modificar Canciones
-							if(genres.size()!=0){
+							if(reproductor->getGeneros().size()!=0){
 								string 	nombre, artista, duracion;
 								Genero* g = new Genero();
 								int index, i;								
 								
 								cout<<"Ingrese el numero de la cancion a modificar: ";
 								cin>>i;
-								while(i>songs.size() || i<0){
+								while(i>reproductor->getCanciones().size() || i<0){
 									cout<<"El numero igresado no es un indice"<<endl;
 									cout<<"Ingrese el numero de la cancion a modificar: ";
 									cin>>i;
@@ -145,21 +138,22 @@ int main(int argc, char** argv) {
 								cin>>nombre;
 								cout<<"Nuevo Arista: ";
 								cin>>artista;
-								listarGeneros(genres);
+								listarGeneros(reproductor->getGeneros());
 								cout<<"Ingrese el numero del indice del genero: ";
 								cin>>index;
-								while(index>genres.size() || index<0){
+								while(index>reproductor->getGeneros().size() || index<0){
 									cout<<"El numero ingresado no es un indice de la lista"<<endl;
 									cout<<"Ingrese el numero del indice del genero: ";
 									cin>>index;
 								}//fin de la validacion
-								g = genres.at(index);
 								cout<<"Ingrese la nueva duracion en formato 00:00: ";
 								cin>>duracion;
 								
+								g = reproductor->getGeneros().at(index);
+								
 								Canciones* song = new Canciones();
 								
-								song = songs.at(i);
+								song = reproductor->getCanciones().at(i);
 								song->setNombre(nombre);
 								song->setArtista(artista);
 								song->setGenero(g);
@@ -178,19 +172,19 @@ int main(int argc, char** argv) {
 							
 							//eliminar Canciones
 							
-							if(genres.size()!=0){
+							if(reproductor->getGeneros().size()!=0){
 								
 								int index;
 								
 								cout<<"Ingrese el indice de la cancion que desea eliminar: ";
 								cin>>index;
-								while(index>songs.size() || index<0){
+								while(index>reproductor->getCanciones().size() || index<0){
 									cout<<"No existe una cancion en ese indice"<<endl;
 									cout<<"Ingrese el indice de la cancion que desea eliminar: ";
 									cin>>index;
 								}
 								
-								songs.erase(songs.begin()+index);
+								reproductor->getCanciones().erase(reproductor->getCanciones().begin()+index);
 								
 								cout<<endl;
 								
@@ -206,7 +200,7 @@ int main(int argc, char** argv) {
 							
 							//listar Canciones
 							
-							listarCanciones(songs);
+							listarCanciones(reproductor->getCanciones());
 							
 							cout<<endl;
 							
@@ -225,7 +219,7 @@ int main(int argc, char** argv) {
 							
 							Genero* g = new Genero(id,nombre);
 							
-							genres.push_back(g);
+							reproductor->agregarGeneros(g);
 							
 							cout<<endl;
 							
@@ -241,7 +235,7 @@ int main(int argc, char** argv) {
 							
 							cout<<"Ingrese el numero del genero que desea modificar: ";
 							cin>>index;
-							while(index>genres.size() || index<0){
+							while(index>reproductor->getGeneros().size() || index<0){
 								cout<<"No existe un genero con ese indice"<<endl;
 								cout<<"Ingrese el numero del genero que desea modificar: ";
 								cin>>index;
@@ -251,7 +245,7 @@ int main(int argc, char** argv) {
 							cin>>nombre;
 							
 							Genero* g = new Genero();
-							g = genres.at(index);
+							g = reproductor->getGeneros().at(index);
 							g->setNombre(nombre);
 							
 							cout<<endl;
@@ -267,13 +261,13 @@ int main(int argc, char** argv) {
 							
 							cout<<"Ingrese el numero del genero que desea eliminar: ";
 							cin>>index;
-							while(index>genres.size() || index<0){
+							while(index>reproductor->getGeneros().size() || index<0){
 								cout<<"No existe un genero con ese indice"<<endl;
 								cout<<"Ingrese el numero del genero que desea eliminar: ";
 								cin>>index;
 							}
 							
-							genres.erase(genres.erase(genres.begin()+index));
+							reproductor->getGeneros().erase(reproductor->getGeneros().erase(reproductor->getGeneros().begin()+index));
 							
 							cout<<endl;
 							
@@ -284,7 +278,7 @@ int main(int argc, char** argv) {
 							
 							//listar genero
 							
-							listarGeneros(genres);
+							listarGeneros(reproductor->getGeneros());
 							cout<<endl;
 							
 							break;
@@ -294,7 +288,7 @@ int main(int argc, char** argv) {
 							
 							//listar albumes
 							
-							listarAlbumes(albums);
+							listarAlbumes(reproductor->getAlbumes());
 							cout<<endl;
 							
 							break;
@@ -304,7 +298,7 @@ int main(int argc, char** argv) {
 							
 							//listar playlists
 							
-							listarPlaylists(playlists);
+							listarPlaylists(reproductor->getPlaylists());
 							
 							break;
 						}
@@ -327,16 +321,16 @@ int main(int argc, char** argv) {
 			
 			case 2:{
 				
-				if(albums.size()!=0){
+				if(reproductor->getAlbumes().size()!=0){
 					
-					listarAlbumes(albums);
+					listarAlbumes(reproductor->getAlbumes());
 				
 					int index, num;
 					
 					cout<<"Ingrese el indice del album que desea utilizar: ";
 					cin>>index;
 					
-					while(index>albums.size() || index<0){
+					while(index>reproductor->getAlbumes().size() || index<0){
 						cout<<"No existe un album en ese indice: "<<endl;
 						cout<<"Ingrese el indice del album que desea utilizar: ";
 						cin>>index;
@@ -352,7 +346,7 @@ int main(int argc, char** argv) {
 					}
 					
 					Album* a = new Album();
-					a = albums.at(index);
+					a = reproductor->getAlbumes().at(index);
 					
 					Album* al = new Album();
 					
@@ -360,7 +354,7 @@ int main(int argc, char** argv) {
 					
 					Playlist* play = new Playlist(al->getNombre(),al->getCanciones());
 					
-					playlists.push_back(play);
+					reproductor->agregarPlaylist(play);
 					
 					cout<<"Playlist: "<<endl;
 					cout<<"Nombre: "<<play->getNombre()<<"\nCanciones: "<<endl;
@@ -401,11 +395,11 @@ int main(int argc, char** argv) {
 								cout<<"Ingrese el nombre de la playlist: ";
 								cin>>nombre;
 								
-								listarCanciones(songs);
+								listarCanciones(reproductor->getCanciones());
 								cout<<"Ingrese el indice de la cancion que desea agregar: ";
 								cin>>index;
 								
-								while(index>songs.size() || index<0){
+								while(index>reproductor->getCanciones().size() || index<0){
 									cout<<"No existe una cancion con ese indice"<<endl;
 									cout<<"Ingrese el indice de la cancion que desea agregar: ";
 									cin>>index;
@@ -413,7 +407,7 @@ int main(int argc, char** argv) {
 								
 								Playlist* play = new Playlist(nombre);
 								Canciones* s = new Canciones();
-								s = songs.at(index);
+								s = reproductor->getCanciones().at(index);
 								
 								cout<<"cancion que se agrega: "<<s->getNombre()<<endl;
 								
@@ -423,33 +417,30 @@ int main(int argc, char** argv) {
 								//no lo vimos en clase tenenos compasion hahaha <3
 								nuevaP = play->operator +(s);
 								
-								playlists.push_back(nuevaP);
+								reproductor->agregarPlaylist(nuevaP);
 								
 								
 							}else if(o==0){
 								
 								int index,in;
-								listarPlaylists(playlists);
+								listarPlaylists(reproductor->getPlaylists());
 								cout<<"Ingrese el indice de la playlist ";
 								cin>>index;
 								
 								Playlist* p = new Playlist();
-								p = playlists.at(index);
+								p = reproductor->getPlaylists().at(index);
 								
-								listarCanciones(songs);
+								listarCanciones(reproductor->getCanciones());
 								cout<<"Ingrese el indice de la cancion que desea agregar: ";
 								cin>>in;
 								
 								Canciones* s = new Canciones();
-								s = songs.at(in);
+								s = reproductor->getCanciones().at(in);
 								
 								Playlist* temp = new Playlist();
 								temp = p->operator +(s);
 								
-								p->setListaCanciones(temp->getListaCanciones());
-								
-								
-								
+								p->setListaCanciones(temp->getListaCanciones());								
 								
 							}else{
 								cout<<"Lea las instrucciones :)"<<endl;
@@ -464,37 +455,37 @@ int main(int argc, char** argv) {
 							
 							int index1,index2;	
 							
-							listarAlbumes(albums);
+							listarAlbumes(reproductor->getAlbumes());
 							cout<<"Ingrese el indice del album que desea agregar a la playlist: ";
 							cin>>index1;
 							
-							while(index1>albums.size() || index1<0){
+							while(index1>reproductor->getAlbumes().size() || index1<0){
 								cout<<"No existe un album en ese indice"<<endl;
 								cout<<"Ingrese el indice del album que desea agregar a la playlist: ";
 								cin>>index1;
 							}//fin de la validacion
 							
 							Album* tempA = new Album();
-							tempA=albums.at(index1);
+							tempA=reproductor->getAlbumes().at(index1);
 							
-							listarPlaylists(playlists);
+							listarPlaylists(reproductor->getPlaylists());
 							cout<<"Ingrese el indice de la playlist que desea agregar: ";
 							cin>>index2;
 							
-							while(index2>playlists.size() || index2<0){
+							while(index2>reproductor->getPlaylists().size() || index2<0){
 								cout<<"No existe un album en ese indice"<<endl;
 								cout<<"Ingrese el indice de la playlist que desea agregar: ";
 								cin>>index2;
 							}//fin de la validacion
 							
 							Playlist* tempP = new Playlist();
-							tempP = playlists.at(index2);
+							tempP = reproductor->getPlaylists().at(index2);
 							
 							Playlist* nueva = new Playlist();
 							
 							nueva = tempP->operator +(tempA);
 							
-							playlists.push_back(nueva);
+							reproductor->agregarPlaylist(nueva);
 							
 							break;
 						}
@@ -515,11 +506,11 @@ int main(int argc, char** argv) {
 								cout<<"Ingrese el nombre del album: ";
 								cin>>nombre;
 								
-								listarCanciones(songs);
+								listarCanciones(reproductor->getCanciones());
 								cout<<"Ingrese el indice de la cancion que desea agregar: ";
 								cin>>index;
 								
-								while(index>songs.size() || index<0){
+								while(index>reproductor->getCanciones().size() || index<0){
 									cout<<"No existe una cancion con ese indice"<<endl;
 									cout<<"Ingrese el indice de la cancion que desea agregar: ";
 									cin>>index;
@@ -527,37 +518,33 @@ int main(int argc, char** argv) {
 								
 								Album* album = new Album(nombre);
 								Canciones* s = new Canciones();
-								s = songs.at(index);
-								
-								//cout<<"Canciones que se agrega: "<<s->getNombre()<<endl;
+								s = reproductor->getCanciones().at(index);
 								
 								Album* nuevoA = new Album();
 								
-								//no me bajes puntos por usarlo como operator en vez de solo el + pleasee :(
-								//no lo vimos en clase tenenos compasion hahaha <3
 								nuevoA = album->operator +(s);
 								
 								nuevoA->setArtista(s->getArtista());
 								
-								albums.push_back(nuevoA);
+								reproductor->agregarAlbumes(nuevoA);
 								
 								
 							}else if(o==0){
 								
 								int index,in;
-								listarAlbumes(albums);
+								listarAlbumes(reproductor->getAlbumes());
 								cout<<"Ingrese el indice del album: ";
 								cin>>index;
 								
 								Album* a = new Album();
-								a = albums.at(index);
+								a = reproductor->getAlbumes().at(index);
 								
-								listarCanciones(songs);
+								listarCanciones(reproductor->getCanciones());
 								cout<<"Ingrese el indice de la cancion que desea agregar: ";
 								cin>>in;
 								
 								Canciones* s = new Canciones();
-								s = songs.at(in);
+								s = reproductor->getCanciones().at(in);
 								
 								Album* temp = new Album();
 								temp = a->operator +(s);
@@ -591,13 +578,13 @@ int main(int argc, char** argv) {
 							
 							//agregar playlist a playlist
 							
-							listarPlaylists(playlists);
+							listarPlaylists(reproductor->getPlaylists());
 							int index1,index2;
 							
 							cout<<"Ingrese el indice de la primera playlist: ";
 							cin>>index1;
 							
-							while(index1>playlists.size() || index1<0){
+							while(index1>reproductor->getPlaylists().size() || index1<0){
 								cout<<"No existe un album en ese indice"<<endl;
 								cout<<"Ingrese el indice de la primera playlist: ";
 								cin>>index1;
@@ -606,7 +593,7 @@ int main(int argc, char** argv) {
 							cout<<"Ingrese el indice de la segunda playlist: ";
 							cin>>index2;
 							
-							while(index2>playlists.size() || index2<0){
+							while(index2>reproductor->getPlaylists().size() || index2<0){
 								cout<<"No existe un album en ese indice"<<endl;
 								cout<<"Ingrese el indice de la segunda playlist: ";
 								cin>>index2;
@@ -615,14 +602,14 @@ int main(int argc, char** argv) {
 							Playlist* play1 = new Playlist();
 							Playlist* play2 = new Playlist();
 							
-							play1 = playlists.at(index1);
-							play2 = playlists.at(index2);
+							play1 = reproductor->getPlaylists().at(index1);
+							play2 = reproductor->getPlaylists().at(index2);
 							
 							Playlist* nueva = new Playlist();
 							
 							nueva = play1->operator +(play2);
 							
-							playlists.push_back(nueva);
+							reproductor->agregarPlaylist(nueva);
 							
 							break;
 						}
@@ -658,19 +645,19 @@ int main(int argc, char** argv) {
 						case 1:{
 							
 							int index1, index2;
-							listarPlaylists(playlists);
+							listarPlaylists(reproductor->getPlaylists());
 							cout<<"Ingrese el indice de la playlist que desea: ";
 							cin>>index1;
 							
 							Playlist* play = new Playlist();
-							play = playlists.at(index1);
+							play = reproductor->getPlaylists().at(index1);
 							
 							listarCanciones(play->getListaCanciones());
 							cout<<"Ingrese el numero de la cancion que desea eliminar: ";
 							cin>>index2;
 							
 							Canciones* c = new Canciones();
-							c = songs.at(index2);
+							c = reproductor->getCanciones().at(index2);
 							
 							Playlist* nueva = new Playlist();
 							
@@ -684,19 +671,19 @@ int main(int argc, char** argv) {
 						case 2:{
 							
 							int index1, index2;
-							listarPlaylists(playlists);
+							listarPlaylists(reproductor->getPlaylists());
 							cout<<"Ingrese el indice de la playlist que desea: ";
 							cin>>index1;
 							
 							Playlist* play = new Playlist();
-							play = playlists.at(index1);
+							play = reproductor->getPlaylists().at(index1);
 							
-							listarGeneros(genres);
+							listarGeneros(reproductor->getGeneros());
 							cout<<"Ingrese el indice del genero que desea: ";
 							cin>>index2;
 							
 							Genero* g = new Genero();
-							g = genres.at(index2);
+							g = reproductor->getGeneros().at(index2);
 							
 							Playlist* nueva = new Playlist();
 							
@@ -740,19 +727,7 @@ int main(int argc, char** argv) {
 	}//fin del while principal
 	
 	
-	delete genero;
-	delete canciones;
-	delete album;
-	delete playlist;
-	
-	for(int i = 0; i < genres.size(); i++){
-		delete genres.at(i);
-	}
-	
-	for(int i = 0; i < songs.size(); i++){
-		delete songs.at(i);
-	}
-	
+	delete reproductor;
 	
 	return 0;
 }

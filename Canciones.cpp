@@ -4,7 +4,8 @@ Canciones::Canciones(){
 	//constructor vacio
 }
 
-Canciones::Canciones(string nombre,string artista,Genero* genero, string duracion){
+Canciones::Canciones(int idCancion,string nombre,string artista,Genero* genero, string duracion){
+	this->idCancion=idCancion;
 	this->nombre=nombre;
 	this->artista=artista;
 	this->genero=genero;
@@ -13,6 +14,14 @@ Canciones::Canciones(string nombre,string artista,Genero* genero, string duracio
 
 Canciones::~Canciones(){
 	//destruir el objeto
+}
+
+void Canciones::setID(int idCancion){
+	this->idCancion=idCancion;
+}
+
+int Canciones::getID(){
+	return this->idCancion;
 }
 
 void Canciones::setNombre(string nombre){

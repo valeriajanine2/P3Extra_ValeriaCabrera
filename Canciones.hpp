@@ -9,6 +9,7 @@ using namespace std;
 
 class Canciones{
 	private:
+		int idCancion;
 		string nombre;
 		string artista;
 		Genero* genero;
@@ -16,12 +17,14 @@ class Canciones{
 		
 	public:
 		Canciones();
-		Canciones(string,string,Genero*,string);
+		Canciones(int,string,string,Genero*,string);
 		~Canciones();
+		void setID(int);
 		void setNombre(string);
 		void setArtista(string);
 		void setGenero(Genero*);
 		void setDuracion(string);
+		int getID();
 		string getNombre();
 		string getArtista();
 		Genero* getGenero();

@@ -25,6 +25,14 @@ class ReproductorMusica{
 		void escribirAlbumes(string);
 		void escribirGeneros(string);
 		void escribirPlaylists(string);
+		void agregarCanciones(Canciones*);
+		void agregarGeneros(Genero*);
+		void agregarAlbumes(Album*);
+		void agregarPlaylist(Playlist*);
+		vector<Canciones*> getCanciones();
+		vector<Album*> getAlbumes();
+		vector<Genero*> getGeneros();
+		vector<Playlist*> getPlaylists();
 };
 
 #endif
