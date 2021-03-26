@@ -50,3 +50,39 @@ vector<Genero*> ReproductorMusica::getGeneros(){
 vector<Playlist*> ReproductorMusica::getPlaylists(){
 	return this->playlists;
 }
+
+void ReproductorMusica::listarCanciones(){
+	for(int i = 0; i < this->canciones.size(); i++){
+		Canciones* c = new Canciones();
+		c = this->canciones.at(i);
+		cout<<i<<") "<<c->getNombre()<<" - "<<c->getArtista()<<" Genero: "<<c->getGenero()->getNombre()<<" Duracion: "<<c->getDuracion()<<endl;
+	}
+}
+
+void ReproductorMusica::listarAlbums(){
+	for(int i = 0; i < this->albumes.size(); i++){
+		Album* a = new Album();
+		a = this->albumes.at(i);
+		cout<<i<<") Nombre: "<<a->getNombre()<<" - "<<a->getArtista()<<endl;
+		a->listarCanciones();
+		cout<<endl;
+	}
+}
+
+void ReproductorMusica::listarGeneros(){
+	for(int i = 0; i < this->generos.size(); i++){
+		Genero* g = new Genero();
+		g = this->generos.at(i);
+		cout<<i<<") "<<g->getNombre()<<endl;
+	}
+}
+
+void ReproductorMusica::listarPlaylists(){
+	for(int i = 0; i < this->playlists.size(); i++){
+		Playlist* p = new Playlist();
+		p = this->playlists.at(i);
+		cout<<i<<") "<<p->getNombre()<<endl;
+		p->listarCanciones();
+		cout<<endl;
+	}
+}

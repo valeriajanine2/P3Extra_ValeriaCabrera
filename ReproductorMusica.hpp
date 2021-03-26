@@ -33,6 +33,10 @@ class ReproductorMusica{
 		vector<Album*> getAlbumes();
 		vector<Genero*> getGeneros();
 		vector<Playlist*> getPlaylists();
+		void listarCanciones();
+		void listarGeneros();
+		void listarPlaylists();
+		void listarAlbums();
 };
 
 #endif
