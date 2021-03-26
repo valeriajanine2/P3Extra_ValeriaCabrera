@@ -55,3 +55,7 @@ void Canciones::setDuracion(string nombre){
 string Canciones::getDuracion(){
 	return this->duracion;
 }
+
+void Canciones::guardarCancion(ofstream* guardar){
+	
+}

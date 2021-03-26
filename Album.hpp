@@ -29,6 +29,8 @@ class Album{
 		Album* operator * (int);
 		Album* operator + (Canciones*);
 		void setListaCanciones(vector<Canciones*>);
+		void guardarAlbum(ofstream*);
+		Album* cargarAlbum(ifstream*,vector<Canciones*>);
 };
 
 #endif

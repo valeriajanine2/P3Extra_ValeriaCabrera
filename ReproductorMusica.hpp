@@ -37,6 +37,13 @@ class ReproductorMusica{
 		void listarGeneros();
 		void listarPlaylists();
 		void listarAlbums();
+		void MultAlbum(Album*,int);
+		void CancionAPlaylist(Playlist*,Canciones*,int);
+		void AlbumAPlaylist(Playlist*,Album*);
+		void CancionAAlbum(Album*,Canciones*,int);
+		void PlaylistAPlaylist(Playlist*,Playlist*);
+		void PlaylistMenosCancion(Playlist*,Canciones*);
+		void PlaylistMenosGenero(Playlist*,Genero*);
 };
 
 #endif

@@ -19,6 +19,8 @@ class Genero{
 		void setID(int);
 		string getNombre();
 		int getID();
+		void guardarGnero(ofstream*);
+		Genero* cargarGenero(ifstream*);
 };
 
 #endif

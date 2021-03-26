@@ -29,6 +29,8 @@ class Playlist{
 		Playlist* operator + (Album*);
 		Playlist* operator - (Canciones*);
 		Playlist* operator - (Genero*);
+		void guardarPlaylist(ofstream*);
+		Playlist* cargarPlaylist(ifstream*,vector<Canciones*>);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "ReproductorMusica.hpp"
 #include "Album.hpp"
 #include "Canciones.hpp"
@@ -9,45 +10,14 @@
 
 
 using namespace std;
-/*
-void listarGeneros(vector<Genero*> lista){
-	for(int i = 0; i < lista.size(); i++){
-		Genero* g = new Genero();
-		g = lista.at(i);
-		cout<<i<<") "<<g->getNombre()<<endl;
-	}
-}
-
-void listarCanciones(vector<Canciones*> lista){
-	for(int i = 0; i < lista.size(); i++){
-		Canciones* c = new Canciones();
-		c = lista.at(i);
-		cout<<i<<") "<<c->getNombre()<<" - "<<c->getArtista()<<" Genero: "<<c->getGenero()->getNombre()<<" Duracion: "<<c->getDuracion()<<endl;
-	}
-}
-
-void listarAlbumes(vector<Album*> lista){
-	for(int i = 0; i < lista.size(); i++){
-		Album* a = new Album();
-		a = lista.at(i);
-		cout<<i<<") Nombre: "<<a->getNombre()<<" - "<<a->getArtista()<<endl;
-		a->listarCanciones();
-		cout<<endl;
-	}
-}
-
-void listarPlaylists(vector<Playlist*> lista){
-	for(int i = 0; i < lista.size(); i++){
-		Playlist* p = new Playlist();
-		p = lista.at(i);
-		cout<<i<<") "<<p->getNombre()<<endl;
-		p->listarCanciones();
-		cout<<endl;
-	}
-}
-*/
 
 int main(int argc, char** argv) {
+	
+	//crear archivos binarios
+	ofstream* ofCanciones = new ofstream("canciones.sng",ios::out|ios::binary);
+	ofstream* ofGeneros = new ofstream("generos.gnr",ios::out|ios::binary);
+	ofstream* ofPlaylists = new ofstream("playlists.plt",ios::out|ios::binary);
+	ofstream* ofAlbums = new ofstream("albums.alb",ios::out|ios::binary);
 	
 	int opcion=0;
 	
@@ -348,17 +318,7 @@ int main(int argc, char** argv) {
 					Album* a = new Album();
 					a = reproductor->getAlbumes().at(index);
 					
-					Album* al = new Album();
-					
-					al = a->operator *(num);
-					
-					Playlist* play = new Playlist(al->getNombre(),al->getCanciones());
-					
-					reproductor->agregarPlaylist(play);
-					
-					cout<<"Playlist: "<<endl;
-					cout<<"Nombre: "<<play->getNombre()<<"\nCanciones: "<<endl;
-					play->listarCanciones();
+					reproductor->MultAlbum(a,num);
 					
 				}else{
 					cout<<"No se han creado albums aun";
@@ -409,15 +369,7 @@ int main(int argc, char** argv) {
 								Canciones* s = new Canciones();
 								s = reproductor->getCanciones().at(index);
 								
-								cout<<"cancion que se agrega: "<<s->getNombre()<<endl;
-								
-								Playlist* nuevaP = new Playlist();
-								
-								//no me bajes puntos por usarlo como operator en vez de solo el + pleasee :(
-								//no lo vimos en clase tenenos compasion hahaha <3
-								nuevaP = play->operator +(s);
-								
-								reproductor->agregarPlaylist(nuevaP);
+								reproductor->CancionAPlaylist(play,s,o);
 								
 								
 							}else if(o==0){
@@ -437,10 +389,8 @@ int main(int argc, char** argv) {
 								Canciones* s = new Canciones();
 								s = reproductor->getCanciones().at(in);
 								
-								Playlist* temp = new Playlist();
-								temp = p->operator +(s);
-								
-								p->setListaCanciones(temp->getListaCanciones());								
+								reproductor->CancionAPlaylist(p,s,o);
+															
 								
 							}else{
 								cout<<"Lea las instrucciones :)"<<endl;
@@ -481,11 +431,7 @@ int main(int argc, char** argv) {
 							Playlist* tempP = new Playlist();
 							tempP = reproductor->getPlaylists().at(index2);
 							
-							Playlist* nueva = new Playlist();
-							
-							nueva = tempP->operator +(tempA);
-							
-							reproductor->agregarPlaylist(nueva);
+							reproductor->AlbumAPlaylist(tempP,tempA);
 							
 							break;
 						}
@@ -520,13 +466,7 @@ int main(int argc, char** argv) {
 								Canciones* s = new Canciones();
 								s = reproductor->getCanciones().at(index);
 								
-								Album* nuevoA = new Album();
-								
-								nuevoA = album->operator +(s);
-								
-								nuevoA->setArtista(s->getArtista());
-								
-								reproductor->agregarAlbumes(nuevoA);
+								reproductor->CancionAAlbum(album,s,o);
 								
 								
 							}else if(o==0){
@@ -546,25 +486,7 @@ int main(int argc, char** argv) {
 								Canciones* s = new Canciones();
 								s = reproductor->getCanciones().at(in);
 								
-								Album* temp = new Album();
-								temp = a->operator +(s);
-								
-								int cont = 0;
-								
-								for(int i = 0; i < temp->getCanciones().size(); i++){
-									Canciones* c = new Canciones();
-									c = temp->getCanciones().at(i);
-									if(c->getArtista()!=s->getArtista()){
-										cont++;
-									}
-								}
-								
-								if(cont>0){
-									a->setArtista("Various Artists");
-								}
-								
-								a->setListaCanciones(temp->getCanciones());
-								
+								reproductor->CancionAAlbum(a,s,o);
 								
 								
 							}else{
@@ -605,11 +527,7 @@ int main(int argc, char** argv) {
 							play1 = reproductor->getPlaylists().at(index1);
 							play2 = reproductor->getPlaylists().at(index2);
 							
-							Playlist* nueva = new Playlist();
-							
-							nueva = play1->operator +(play2);
-							
-							reproductor->agregarPlaylist(nueva);
+							reproductor->PlaylistAPlaylist(play1,play2);
 							
 							break;
 						}
@@ -659,11 +577,7 @@ int main(int argc, char** argv) {
 							Canciones* c = new Canciones();
 							c = reproductor->getCanciones().at(index2);
 							
-							Playlist* nueva = new Playlist();
-							
-							nueva = play->operator -(c);
-							
-							play->setListaCanciones(nueva->getListaCanciones());
+							reproductor->PlaylistMenosCancion(play,c);
 							
 							break;
 						}
@@ -685,11 +599,7 @@ int main(int argc, char** argv) {
 							Genero* g = new Genero();
 							g = reproductor->getGeneros().at(index2);
 							
-							Playlist* nueva = new Playlist();
-							
-							nueva = play->operator -(g);
-							
-							play->setListaCanciones(nueva->getListaCanciones());
+							reproductor->PlaylistMenosGenero(play,g);
 							
 							break;
 						}
@@ -726,6 +636,10 @@ int main(int argc, char** argv) {
 		
 	}//fin del while principal
 	
+	ofCanciones->close();
+	ofGeneros->close();
+	ofPlaylists->close();
+	ofAlbums->close();
 	
 	delete reproductor;
 	

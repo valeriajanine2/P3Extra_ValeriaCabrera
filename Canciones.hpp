@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 #include "Genero.hpp"
 
 using namespace std;
@@ -29,6 +30,8 @@ class Canciones{
 		string getArtista();
 		Genero* getGenero();
 		string getDuracion();
+		void guardarCancion(ofstream*);
+		Canciones* cargarCancion(ifstream*,vector<Genero*>);
 };
 
 #endif
